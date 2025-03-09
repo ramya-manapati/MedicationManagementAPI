@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicationManagementAPI.Controllers
 {
-    [Route("api/userregistration")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -89,10 +89,9 @@ namespace MedicationManagementAPI.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email)
             };
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -101,15 +100,17 @@ namespace MedicationManagementAPI.Controllers
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = credentials,
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"]
+                Issuer = _config["Jwt:Issuer"],    
+                Audience = _config["Jwt:Issuer"],
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            Console.WriteLine($"Generated Token: {token}");
-            return tokenHandler.WriteToken(token);
+            Console.WriteLine($"Generated Token: {tokenHandler.WriteToken(token)}");
+
+            return tokenHandler.WriteToken(token);  
         }
+
     }
 }
 
