@@ -85,4 +85,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapGet("/", () => "Welcome to the Medication Management API!");
 app.Run();
